@@ -4,7 +4,7 @@
 
 ## Install
 
-1. Download the `validation` folder. 
+1. Download the `validation` folder.
 2. If you are using [Boiler](https://github.com/baltazzar/boiler), put the `validation` folder inside the `application/behaviors`. Create the `behaviors` folder if it not exists.
 
 ## How to use
@@ -13,7 +13,7 @@ Put this in your Marionette ItemView:
 
 ```js
 behaviors: [{
-	behaviorClass: require('behaviors/validation'), // if using node or webpack|browserify|requirejs
+	behaviorClass: require('behaviors/validation'), // if using webpack|browserify
 	rules: {
 		'[name="nome"]'  : ['required', 'Nome é obrigatório!'],
 		'[name="idade"]' : [

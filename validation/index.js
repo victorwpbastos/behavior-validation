@@ -20,7 +20,7 @@ module.exports = Marionette.Behavior.extend({
 			e.preventDefault();
 
 			this.hideErrors();
-			this.prepareRuleFns(validationRules);
+			_(validationRules).each(this.prepareRuleFns, this);
 			this.triggered = true;
 		};
 	},
@@ -35,7 +35,7 @@ module.exports = Marionette.Behavior.extend({
 
 				if(this.triggered) {
 					this.hideErrors(field);
-					this.prepareRuleFns(validationRules);
+					this.prepareRuleFns(fns, field);
 				}
 			};
 		}, this);
@@ -44,19 +44,17 @@ module.exports = Marionette.Behavior.extend({
 	/*
 	*	Prepare the functions. Verify and normalize the format of the rules passed.
 	*/
-	prepareRuleFns: function(validationRules) {
-		_(validationRules).each(function(fns, field) {
-			if(!_.some(fns, _.isArray)) {
-				fns = [fns];
+	prepareRuleFns: function(fns, field) {
+		if(!_.some(fns, _.isArray)) {
+			fns = [fns];
+		}
+
+		_(fns).each(function(fn) {
+			if(!_.isFunction(fn) && !_.isFunction(fn[0])) {
+				fn = require('./rules/' + fn[0]).apply(fn, _.rest(fn) );
 			}
 
-			_(fns).each(function(fn) {
-				if(!_.isFunction(fn) && !_.isFunction(fn[0])) {
-					fn = require('./rules/' + fn[0]).apply(fn, _.rest(fn) );
-				}
-
-				this.executeRuleFn(fn, field);
-			}, this);
+			this.executeRuleFn(fn, field);
 		}, this);
 	},
 
@@ -67,10 +65,12 @@ module.exports = Marionette.Behavior.extend({
 		fields = this.view.$(fields);
 
 		fields.each(function(i, field) {
-			var message = fn.call(this, $(field));
+			field = $(field);
+
+			var message = fn.call(this, field);
 
 			if(message) {
-				this.showError($(field), message);
+				this.showError(field, message);
 			}
 		}.bind(this));
 	},

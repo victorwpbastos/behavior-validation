@@ -8,6 +8,11 @@ module.exports = Marionette.Behavior.extend({
 		this.triggerAgainEvent = this.options.triggerAgainEvent || 'change';
 		this.triggered = false;
 		this.errors = [];
+		this.handleErrors = true;
+
+		if(this.options.handleErrors === false) {
+			this.handleErrors = false;
+		}
 
 		this.prepareFirstEvent(this.options.rules, this.trigger);
 		this.prepareSubsequentEvents(this.options.rules, this.triggerAgainEvent);
@@ -94,11 +99,13 @@ module.exports = Marionette.Behavior.extend({
 	*	Show the error messages.
 	*/
 	showError: function(field, message) {
-		if(!field.parents('.form-group').hasClass('has-error')) {
-			field
-				.parents('.form-group')
-				.addClass('has-error')
-				.append('<div class="text-danger" style="white-space:nowrap;">' + message + '</div>');
+		if(this.handleErrors) {
+			if(!field.parents('.form-group').hasClass('has-error')) {
+				field
+					.parents('.form-group')
+					.addClass('has-error')
+					.append('<div class="text-danger" style="white-space:nowrap;">' + message + '</div>');
+			}
 		}
 	},
 
@@ -106,17 +113,19 @@ module.exports = Marionette.Behavior.extend({
 	*	Hide the error messages.
 	*/
 	hideErrors: function(field) {
-		if(field) {
-			this.view.$(field)
-				.parents('.form-group')
-				.removeClass('has-error')
-				.find('div.text-danger')
-				.remove();
-		} else {
-			this.view.$('.form-group')
-				.removeClass('has-error')
-				.find('div.text-danger')
-				.remove();
+		if(this.handleErrors) {
+			if(field) {
+				this.view.$(field)
+					.parents('.form-group')
+					.removeClass('has-error')
+					.find('div.text-danger')
+					.remove();
+			} else {
+				this.view.$('.form-group')
+					.removeClass('has-error')
+					.find('div.text-danger')
+					.remove();
+			}
 		}
 	}
 });

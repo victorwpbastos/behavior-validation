@@ -66,9 +66,9 @@ rules: {
 2. The first item of array is the name of the rule (filename);
 3. The other items of the array are passed to the rule function respecting the order.
 
-## onValidate
+## onValidation
 
-When a validation is triggered, the `onValidation` event is called. You can register the `onValidate` event in the view to receive an array containing all the validation errors.
+When a validation is triggered, the `onValidation` event is called. You can register the `onValidation` event in the view to receive an array containing all the validation errors.
 
 ```js
 ...

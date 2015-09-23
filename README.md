@@ -64,3 +64,15 @@ rules: {
 1. Rules must be passed in array format;
 2. The first item of array is the name of the rule (filename);
 3. The other items of the array are passed to the rule function respecting the order.
+
+## onValidate
+
+When a validation is triggered, the `onValidation` event is called. You can register the `onValidate` event in the view to receive an array containing all the validation errors.
+
+```js
+...
+onValidation: function(errors) {
+	// do something with the errors array
+}
+...
+```

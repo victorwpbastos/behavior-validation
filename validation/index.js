@@ -8,14 +8,14 @@ module.exports = Marionette.Behavior.extend({
 		this.triggerAgainEvent = this.options.triggerAgainEvent || 'change';
 		this.triggered = false;
 
-		this.prepareTriggerEvent(this.options.rules, this.trigger);
-		this.prepareFieldChangeEvents(this.options.rules, this.triggerAgainEvent);
+		this.prepareFirstEvent(this.options.rules, this.trigger);
+		this.prepareSubsequentEvents(this.options.rules, this.triggerAgainEvent);
 	},
 
 	/*
 	*	Prepare the rules to be triggered for the first time.
 	*/
-	prepareTriggerEvent: function(validationRules, trigger) {
+	prepareFirstEvent: function(validationRules, trigger) {
 		this.events[trigger] = function(e) {
 			e.preventDefault();
 
@@ -28,7 +28,7 @@ module.exports = Marionette.Behavior.extend({
 	/*
 	*	Prepare the rules to be triggered again when field changes.
 	*/
-	prepareFieldChangeEvents: function(validationRules, trigger) {
+	prepareSubsequentEvents: function(validationRules, trigger) {
 		_(validationRules).each(function(fns, field) {
 			this.events[trigger + ' ' + field] = function(e) {
 				e.preventDefault();

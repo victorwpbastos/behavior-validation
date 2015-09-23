@@ -22,7 +22,8 @@ behaviors: [{
 		]
 	},
 	trigger: 'submit form', // default event for initial validation
-	triggerAgainEvent: 'change' // default event for subsequent validation
+	triggerAgainEvent: 'change', // default event for subsequent validation
+	handleErrors: true // default true. If false, no error messages would be shown
 }]
 ```
 

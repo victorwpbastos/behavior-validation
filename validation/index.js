@@ -7,6 +7,7 @@ module.exports = Marionette.Behavior.extend({
 		this.trigger = this.options.trigger || 'submit form';
 		this.triggerAgainEvent = this.options.triggerAgainEvent || 'change';
 		this.triggered = false;
+		this.errors = [];
 
 		this.prepareFirstEvent(this.options.rules, this.trigger);
 		this.prepareSubsequentEvents(this.options.rules, this.triggerAgainEvent);
@@ -21,6 +22,7 @@ module.exports = Marionette.Behavior.extend({
 
 			this.hideErrors();
 			_(validationRules).each(this.prepareRuleFns, this);
+			this.broadcastErrors();
 			this.triggered = true;
 		};
 	},
@@ -34,8 +36,13 @@ module.exports = Marionette.Behavior.extend({
 				e.preventDefault();
 
 				if(this.triggered) {
+					this.errors = _(this.errors).filter(function(error) {
+						return error.field[0] !== $(field)[0];
+					});
+
 					this.hideErrors(field);
 					this.prepareRuleFns(fns, field);
+					this.broadcastErrors();
 				}
 			};
 		}, this);
@@ -71,8 +78,16 @@ module.exports = Marionette.Behavior.extend({
 
 			if(message) {
 				this.showError(field, message);
+				this.errors.push({field: field, message: message});
 			}
 		}.bind(this));
+	},
+
+	/*
+	*	Send the errors collection to view on event onValidate
+	*/
+	broadcastErrors: function() {
+		this.view.triggerMethod('validation', this.errors);
 	},
 
 	/*

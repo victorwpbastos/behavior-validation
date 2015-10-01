@@ -5,7 +5,7 @@
 ## Install
 
 1. Download the `validation` folder;
-2. If you are using [Boiler](https://github.com/baltazzar/boiler), put the `validation` folder inside the `application/behaviors`. Create the `behaviors` folder if it not exists.
+2. If you are using [Boiler](https://github.com/baltazzar/boiler), put the `validation` folder inside the `application/behaviors` folder. Create the `behaviors` folder if it not exists.
 
 ## How to use
 

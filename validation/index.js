@@ -14,6 +14,10 @@ module.exports = Marionette.Behavior.extend({
 			this.handleErrors = false;
 		}
 
+		if(_.isFunction(this.options.rules)) {
+			this.options.rules = this.options.rules.apply(this.view);
+		}
+
 		this.prepareFirstEvent(this.options.rules, this.trigger);
 		this.prepareSubsequentEvents(this.options.rules, this.triggerAgainEvent);
 	},

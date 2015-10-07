@@ -2,7 +2,7 @@ var Marionette = require('marionette');
 var _ = require('underscore');
 
 module.exports = Marionette.Behavior.extend({
-	initialize: function() {
+	onRender: function() {
 		this.events = {};
 		this.trigger = this.options.trigger || 'submit form';
 		this.triggerAgainEvent = this.options.triggerAgainEvent || 'change';
@@ -26,14 +26,15 @@ module.exports = Marionette.Behavior.extend({
 	*	Prepare the rules to be triggered for the first time.
 	*/
 	prepareFirstEvent: function(validationRules, trigger) {
-		this.events[trigger] = function(e) {
+		this.view.$el.off(trigger);
+		this.view.$el.on(trigger, function(e) {
 			e.preventDefault();
 
 			this.hideErrors();
 			_(validationRules).each(this.prepareRuleFns, this);
 			this.broadcastErrors();
 			this.triggered = true;
-		};
+		}.bind(this));
 	},
 
 	/*
@@ -41,7 +42,8 @@ module.exports = Marionette.Behavior.extend({
 	*/
 	prepareSubsequentEvents: function(validationRules, trigger) {
 		_(validationRules).each(function(fns, field) {
-			this.events[trigger + ' ' + field] = function(e) {
+			this.view.$el.off(trigger, field);
+			this.view.$el.on(trigger, field, function(e) {
 				e.preventDefault();
 
 				if(this.triggered) {
@@ -53,7 +55,7 @@ module.exports = Marionette.Behavior.extend({
 					this.prepareRuleFns(fns, field);
 					this.broadcastErrors();
 				}
-			};
+			}.bind(this));
 		}, this);
 	},
 

@@ -4,8 +4,8 @@ var _ = require('underscore');
 module.exports = Marionette.Behavior.extend({
 	initialize: function() {
 		// Inject the necessary methods to perform validation in the view.
-		this.view.triggerValidate = this.validate.bind(this);
-		this.view.triggerRevalidate = this.revalidate.bind(this);
+		this.view.triggerValidation = this.validate.bind(this);
+		this.view.triggerRevalidation = this.revalidate.bind(this);
 	},
 
 	onRender: function() {
@@ -70,7 +70,7 @@ module.exports = Marionette.Behavior.extend({
 			var errorMessage = fn.call(this, field);
 
 			if(errorMessage) {
-				field.addClass('field-validated');
+				field.addClass('validated-field');
 				this.showError(field, errorMessage);
 				this._errors.push({field: field, message: errorMessage});
 			}

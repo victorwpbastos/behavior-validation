@@ -12,6 +12,11 @@
 Put this in your Marionette ItemView:
 
 ```js
+events: {
+	'submit form'             : 'triggerValidation',  // event for first validation
+	'change .validated-field' : 'triggerRevalidation' // event for subsequent validations
+},
+
 behaviors: [{
 	behaviorClass: require('behaviors/validation'), // if using webpack|browserify
 	rules: {
@@ -21,8 +26,6 @@ behaviors: [{
 			['greaterthan', 18, 'Age must be greater than 18.']
 		]
 	},
-	trigger: 'submit form', // default event for initial validation
-	triggerAgainEvent: 'change', // default event for subsequent validation
 	handleErrors: true // default true. If false, no error messages would be shown
 }]
 ```
@@ -33,12 +36,20 @@ The rules must be defined in the folder `validation/rules` following the format 
 
 ```js
 // validation/rules/required.js
-module.exports = function(message) { // parameters passed by the user
+module.exports = function(message) {
 	message = message || 'Value is required';
 
 	return function(field) {
-		if(field.val() === '') {
-			return message;
+		if(field[0].type === 'radio' || field[0].type === 'checkbox') {
+			var attrName = field[0].name;
+
+			if($('[name="' + attrName + '"]').is(':checked') === false) {
+				return message;
+			}
+		} else {
+			if(field.val() === '') {
+				return message;
+			}
 		}
 	};
 };

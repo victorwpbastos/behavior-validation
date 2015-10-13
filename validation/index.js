@@ -36,13 +36,16 @@ module.exports = Marionette.Behavior.extend({
 		}.bind(this));
 
 		this.broadcastErrors();
+		this.triggered = true;
 	},
 
 	/*
 	*	Function to trigger the subsequent validations.
 	*/
 	revalidate: function(e) {
-		this.validate(null);
+		if(this.triggered) {
+			this.validate(null);
+		}
 	},
 
 	/*

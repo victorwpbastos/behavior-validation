@@ -4,7 +4,11 @@ var _ = require('underscore');
 module.exports = Marionette.Behavior.extend({
 	initialize: function() {
 		// Inject the necessary methods to perform validation in the view.
-		this.view.triggerValidation = this.validate.bind(this);
+		this.view.triggerValidation = function(e) {
+			this.validate(e);
+			this.scrollToFirstError();
+		}.bind(this);
+
 		this.view.triggerRevalidation = this.revalidate.bind(this);
 	},
 
@@ -98,11 +102,6 @@ module.exports = Marionette.Behavior.extend({
 					.addClass('has-error')
 					.append('<div class="text-danger" style="white-space:nowrap;">' + errorMessage + '</div>');
 			}
-
-			try {
-				// scroll to the first error
-				$('body').scrollTop( this.view.$('.has-error:first').position().top );
-			} catch(err) {}
 		}
 	},
 
@@ -116,5 +115,19 @@ module.exports = Marionette.Behavior.extend({
 				.find('div.text-danger')
 				.remove();
 		}
+	},
+
+	/*
+	*	Scroll to the first error
+	*/
+	scrollToFirstError: function() {
+		try {
+			if(this.view.$('.has-error').length > 0) {
+				var top = this.view.$('.has-error').position().top;
+				if(top) {
+					$('body').scrollTop(top);
+				}
+			}
+		} catch(err) {}
 	}
 });

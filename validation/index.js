@@ -6,7 +6,10 @@ module.exports = Marionette.Behavior.extend({
 		// Inject the necessary methods to perform validation in the view.
 		this.view.triggerValidation = function(e) {
 			this.validate(e);
-			this.scrollToFirstError();
+
+			if(this._handleErrors && this._scrollToFirstError) {
+				this.scrollToFirstError();
+			}
 		}.bind(this);
 
 		this.view.triggerRevalidation = this.revalidate.bind(this);
@@ -15,9 +18,14 @@ module.exports = Marionette.Behavior.extend({
 	onRender: function() {
 		this._rules = this.options.rules;
 		this._handleErrors = true;
+		this._scrollToFirstError = true;
 
 		if(this.options.handleErrors === false) {
 			this._handleErrors = false;
+		}
+
+		if(this.options.scrollToFirstError === false) {
+			this._scrollToFirstError = false;
 		}
 
 		// rules can be passed as a function.
@@ -121,13 +129,8 @@ module.exports = Marionette.Behavior.extend({
 	*	Scroll to the first error
 	*/
 	scrollToFirstError: function() {
-		try {
-			if(this.view.$('.has-error').length > 0) {
-				var top = this.view.$('.has-error').position().top;
-				if(top) {
-					$('body').scrollTop(top);
-				}
-			}
-		} catch(err) {}
+		if($('.has-error').length > 0) {
+			$('body').scrollTop($('.has-error:first').position().top);
+		}
 	}
 });

@@ -98,6 +98,11 @@ module.exports = Marionette.Behavior.extend({
 					.addClass('has-error')
 					.append('<div class="text-danger" style="white-space:nowrap;">' + errorMessage + '</div>');
 			}
+
+			try {
+				// scroll to the first error
+				$('body').scrollTop( this.view.$('.has-error:first').position().top );
+			} catch(err) {}
 		}
 	},
 

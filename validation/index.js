@@ -130,7 +130,7 @@ module.exports = Marionette.Behavior.extend({
 	*/
 	scrollToFirstError: function() {
 		if($('.has-error').length > 0) {
-			$('body').scrollTop($('.has-error:first').position().top);
+			$('body').scrollTop($('.has-error:first').offset().top);
 		}
 	}
 });

@@ -14,7 +14,10 @@ Put this in your Marionette ItemView:
 ```js
 events: {
 	'submit form'             : 'triggerValidation',  // event for first validation
-	'change .validated-field' : 'triggerRevalidation' // event for subsequent validations
+	'change .validated-field' : 'triggerRevalidation', // event for subsequent validations
+	'change <some selector>'  : function(e) {
+		this.triggerValidationByRules(<rules object>);
+	} // trigger some custom validations
 },
 
 behaviors: [{

@@ -67,6 +67,7 @@ module.exports = Marionette.Behavior.extend({
     validateByRules: function(rules) {
         if(rules) {
             this.validate(null, rules);
+            this.triggered = false;
         }
     },
 
